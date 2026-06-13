@@ -98,6 +98,17 @@ export interface PublishTask {
   url?: string;
   error?: string;
   publishedAt?: number;
+  // 数据跟踪监测字段
+  trackingId?: string;
+  metrics?: {
+    impressions?: number;      // 曝光量
+    clicks?: number;           // 点击量
+    likes?: number;            // 点赞数
+    shares?: number;           // 分享数
+    comments?: number;         // 评论数
+    conversionRate?: number;   // 转化率
+  };
+  trackingEnabled?: boolean;   // 是否启用数据跟踪
 }
 
 // 分发状态

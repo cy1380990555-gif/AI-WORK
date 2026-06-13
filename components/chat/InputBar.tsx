@@ -10,7 +10,7 @@ interface InputBarProps {
 }
 
 export function InputBar({ placeholder = '输入你的营销需求...', disabled = false }: InputBarProps) {
-  const [input, setInput] = useState('帮我推广EX7车型');
+  const [input, setInput] = useState('帮我推广EX7电动摩托车');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const addMessage = useFlowStore((s) => s.addMessage);
   const setStep = useFlowStore((s) => s.setStep);
