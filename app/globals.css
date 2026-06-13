@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #1e293b;
 }
 
 @theme inline {
@@ -12,15 +12,67 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Markdown prose 样式覆盖 */
+.prose {
+  color: #374151;
+  line-height: 1.7;
+}
+
+.prose p {
+  margin-bottom: 0.75em;
+}
+
+.prose h1, .prose h2, .prose h3 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.prose li {
+  margin-bottom: 0.25em;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #111827;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose blockquote {
+  border-left: 3px solid #6366f1;
+  padding-left: 1em;
+  color: #6b7280;
+  font-style: italic;
 }

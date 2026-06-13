@@ -1,63 +1,86 @@
-import Image from "next/image";
+'use client';
+
+import { ChatContainer } from '@/components/chat/ChatContainer';
+import { useFlowStore } from '@/lib/store/flowStore';
+import { CONTENT_TYPE_LABELS, type FlowStep } from '@/lib/types';
+
+const STEP_LABELS: Record<FlowStep, string> = {
+  idle: '输入需求',
+  intent_recognized: '选择方向',
+  direction_chosen: '生成大纲',
+  outline_confirmed: '生成内容',
+  content_ready: '预览确认',
+  publishing: '分发中',
+  published: '已完成',
+};
+
+const STEPS_ORDER: FlowStep[] = [
+  'idle',
+  'intent_recognized',
+  'direction_chosen',
+  'outline_confirmed',
+  'content_ready',
+  'publishing',
+  'published',
+];
 
 export default function Home() {
+  const currentStep = useFlowStore((s) => s.currentStep);
+
+  const currentStepIndex = STEPS_ORDER.indexOf(currentStep);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="h-full flex flex-col">
+      {/* 顶部导航 */}
+      <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+            </svg>
+          </div>
+          <h1 className="text-lg font-semibold text-gray-900">AI 营销工作台</h1>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* 流程进度条 */}
+        <div className="hidden md:flex items-center gap-1">
+          {STEPS_ORDER.map((step, index) => {
+            const isActive = index === currentStepIndex;
+            const isCompleted = index < currentStepIndex;
+
+            return (
+              <div key={step} className="flex items-center">
+                <div className={`
+                  flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all
+                  ${isActive ? 'bg-indigo-100 text-indigo-700' : ''}
+                  ${isCompleted ? 'bg-green-100 text-green-700' : ''}
+                  ${!isActive && !isCompleted ? 'bg-gray-100 text-gray-400' : ''}
+                `}>
+                  {isCompleted && (
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                  )}
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full" />
+                  )}
+                  {STEP_LABELS[step]}
+                </div>
+                {index < STEPS_ORDER.length - 1 && (
+                  <svg className="w-4 h-4 text-gray-300 mx-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                  </svg>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </header>
+
+      {/* 主内容区 */}
+      <main className="flex-1 overflow-hidden">
+        <div className="h-full max-w-4xl mx-auto">
+          <ChatContainer />
         </div>
       </main>
     </div>
